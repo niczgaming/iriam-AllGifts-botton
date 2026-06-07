@@ -15,24 +15,25 @@ button{border:0;border-radius:12px;background:white;padding:10px 14px;font-size:
 button.active{background:#1e88ff;color:white}
 main{padding:14px}
 .panel{background:white;border-radius:16px;margin:0 0 18px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.13)}
-.panel.hidden{display:none}
 .stage{position:relative;width:100%;line-height:0}
 .stage img{width:100%;display:block;user-select:none}
 .hit{position:absolute;border-radius:10px;cursor:pointer;line-height:1}
-.hit.done{background:rgba(160,160,160,.45)}
+.hit.done{background:rgba(160,160,160,.42)}
+.hit.done::before,
 .hit.done::after{
- content:"❌";
+ content:"";
  position:absolute;
- inset:0;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:clamp(32px,7vw,76px);
- color:red;
- font-weight:900;
- text-shadow:0 0 8px white,0 0 8px white;
+ left:8%;
+ top:45%;
+ width:84%;
+ height:12%;
+ background:red;
+ border-radius:999px;
+ box-shadow:0 0 6px white,0 0 6px white;
  pointer-events:none;
 }
+.hit.done::before{transform:rotate(45deg)}
+.hit.done::after{transform:rotate(-45deg)}
 .panel-title{font-weight:900;font-size:24px;padding:12px 14px;text-align:center}
 </style>
 </head>
@@ -49,11 +50,11 @@ main{padding:14px}
 <main id="main"></main>
 
 <script>
-const categories = {"love": {"label": "LOVE", "image": "love.webp", "size": [1200, 675], "count": 20, "x0": 34, "y0": 150, "sx": 146, "sy": 160, "w": 110, "h": 130, "cols": 8}, "stage": {"label": "ステージ", "image": "stage.webp", "size": [1200, 675], "count": 42, "x0": 25, "y0": 175, "sx": 99, "sy": 104, "w": 76, "h": 92, "cols": 12}, "greet": {"label": "挨拶", "image": "greet.webp", "size": [1200, 675], "count": 35, "x0": 43, "y0": 196, "sx": 91, "sy": 107, "w": 72, "h": 92, "cols": 12}, "great": {"label": "えらい", "image": "great.webp", "size": [1200, 675], "count": 48, "x0": 34, "y0": 185, "sx": 96, "sy": 115, "w": 76, "h": 94, "cols": 12}, "classic": {"label": "定番", "image": "classic.webp", "size": [1200, 958], "count": 147, "x0": 24, "y0": 140, "sx": 69, "sy": 73, "w": 58, "h": 66, "cols": 17}, "laugh": {"label": "笑", "image": "laugh.webp", "size": [1200, 675], "count": 19, "x0": 27, "y0": 176, "sx": 146, "sy": 160, "w": 107, "h": 130, "cols": 8}, "neta": {"label": "ネタ", "image": "neta.webp", "size": [1200, 900], "count": 96, "x0": 24, "y0": 136, "sx": 100, "sy": 107, "w": 74, "h": 95, "cols": 12}};
+const categories = {"love": {"label": "LOVE", "image": "love.webp", "size": [1200, 675], "count": 20, "x0": 34, "y0": 150, "sx": 146, "sy": 160, "w": 110, "h": 110, "cols": 8}, "stage": {"label": "ステージ", "image": "stage.webp", "size": [1200, 675], "count": 42, "x0": 25, "y0": 175, "sx": 99, "sy": 104, "w": 76, "h": 76, "cols": 12}, "greet": {"label": "挨拶", "image": "greet.webp", "size": [1200, 675], "count": 35, "x0": 43, "y0": 196, "sx": 91, "sy": 107, "w": 72, "h": 72, "cols": 12}, "great": {"label": "えらい", "image": "great.webp", "size": [1200, 675], "count": 48, "x0": 34, "y0": 185, "sx": 96, "sy": 115, "w": 76, "h": 76, "cols": 12}, "classic": {"label": "定番", "image": "classic.webp", "size": [1200, 958], "count": 147, "x0": 24, "y0": 140, "sx": 69, "sy": 73, "w": 58, "h": 58, "cols": 17}, "laugh": {"label": "笑", "image": "laugh.webp", "size": [1200, 675], "count": 19, "x0": 27, "y0": 176, "sx": 146, "sy": 160, "w": 107, "h": 107, "cols": 8}, "neta": {"label": "ネタ", "image": "neta.webp", "size": [1200, 900], "count": 96, "x0": 24, "y0": 136, "sx": 100, "sy": 107, "w": 74, "h": 74, "cols": 12}};
 let currentTab = "all";
-let done = JSON.parse(localStorage.getItem("iriamGiftOverlayDone_v1") || "{}");
+let done = JSON.parse(localStorage.getItem("iriamGiftOverlayDone_v2") || "{}");
 
-function save(){ localStorage.setItem("iriamGiftOverlayDone_v1", JSON.stringify(done)); }
+function save(){ localStorage.setItem("iriamGiftOverlayDone_v2", JSON.stringify(done)); }
 
 function makeTabs(){
   const tabs=document.getElementById("tabs");
@@ -85,7 +86,6 @@ function makeHit(catKey, c, i){
   hit.style.top=(y/c.size[1]*100)+"%";
   hit.style.width=(c.w/c.size[0]*100)+"%";
   hit.style.height=(c.h/c.size[1]*100)+"%";
-  hit.title=c.label+" "+i;
   hit.onclick=(e)=>{
     e.stopPropagation();
     done[id]=!done[id];
