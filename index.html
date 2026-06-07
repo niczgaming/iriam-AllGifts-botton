@@ -1,0 +1,79 @@
+
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IRIAM耐久チェッカー</title>
+<style>
+body{font-family:sans-serif;background:#f5f5f5;margin:20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+button{padding:10px 16px;border:none;border-radius:8px;background:#fff;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{position:relative;background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.card img{width:100%;display:block}
+.card.done img{filter:grayscale(100%) opacity(.35)}
+.card.done::after{
+content:"❌";
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:140px;
+font-weight:bold;
+color:red;
+text-shadow:0 0 10px white;
+}
+.hidden{display:none}
+.label{text-align:center;padding:10px;font-weight:bold}
+</style></head><body>
+
+<h1>IRIAM ギフト耐久チェッカー v3</h1>
+
+<div class="tabs">
+<button onclick="showTab('all')">全カテゴリー</button>
+<button onclick="showTab('love')">LOVE</button>
+<button onclick="showTab('stage')">ステージ</button>
+<button onclick="showTab('greet')">挨拶</button>
+<button onclick="showTab('great')">えらい</button>
+<button onclick="showTab('classic')">定番</button>
+<button onclick="showTab('laugh')">笑</button>
+<button onclick="showTab('neta')">ネタ</button>
+</div>
+
+<div class="grid">
+
+<div class="card love" onclick="toggle(this)">
+<img src="love.webp"><div class="label">LOVE</div></div>
+
+<div class="card stage" onclick="toggle(this)">
+<img src="stage.webp"><div class="label">ステージ</div></div>
+
+<div class="card greet" onclick="toggle(this)">
+<img src="greet.webp"><div class="label">挨拶</div></div>
+
+<div class="card great" onclick="toggle(this)">
+<img src="great.webp"><div class="label">えらい</div></div>
+
+<div class="card classic" onclick="toggle(this)">
+<img src="classic.webp"><div class="label">定番</div></div>
+
+<div class="card laugh" onclick="toggle(this)">
+<img src="laugh.webp"><div class="label">笑</div></div>
+
+<div class="card neta" onclick="toggle(this)">
+<img src="neta.webp"><div class="label">ネタ</div></div>
+
+</div>
+
+<script>
+function toggle(el){
+ el.classList.toggle('done');
+}
+
+function showTab(tab){
+ document.querySelectorAll('.card').forEach(c=>{
+   c.classList.toggle('hidden', tab!=='all' && !c.classList.contains(tab));
+ });
+}
+</script>
+
+</body></html>
