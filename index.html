@@ -6,129 +6,24 @@
 <title>IRIAM ギフト耐久チェッカー</title>
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f5f5f5;
-  color:#111;
-}
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:rgba(245,245,245,.96);
-  backdrop-filter:blur(8px);
-  padding:14px;
-  border-bottom:1px solid #ddd;
-}
-.title-row{
-  display:flex;
-  align-items:flex-end;
-  gap:14px;
-  flex-wrap:wrap;
-}
-h1{
-  font-size:22px;
-  margin:0 0 8px;
-  line-height:1.25;
-}
-.update-date{
-  font-size:14px;
-  color:#666;
-  font-weight:700;
-  margin-bottom:10px;
-}
-.status{
-  font-size:16px;
-  font-weight:900;
-  margin:4px 0 14px;
-}
-.tabs{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:14px;
-}
-.tab{
-  border:0;
-  border-radius:18px;
-  padding:13px 20px;
-  background:#fff;
-  color:#2487ff;
-  font-size:16px;
-  font-weight:800;
-  box-shadow:0 2px 8px rgba(0,0,0,.12);
-  cursor:pointer;
-}
-.tab.active{
-  background:#2487ff;
-  color:#fff;
-}
-.controls{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  flex-wrap:wrap;
-  font-size:16px;
-  font-weight:700;
-}
-.controls input{
-  width:18px;
-  height:18px;
-}
-.reset-btn{
-  border:0;
-  border-radius:18px;
-  padding:12px 20px;
-  background:#fff;
-  color:#2487ff;
-  font-size:15px;
-  font-weight:800;
-  box-shadow:0 2px 8px rgba(0,0,0,.12);
-}
-main{
-  padding:18px;
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
-  gap:16px;
-}
-.card{
-  position:relative;
-  background:#fff;
-  border-radius:18px;
-  padding:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,.10);
-  cursor:pointer;
-  overflow:hidden;
-}
-.card img{
-  width:100%;
-  aspect-ratio:1/1;
-  object-fit:contain;
-  display:block;
-}
-.card.done img{
-  filter:grayscale(100%) opacity(.35);
-}
-.card.done::after{
-  content:"";
-  position:absolute;
-  inset:10px;
-  background:
-    linear-gradient(45deg, transparent 42%, red 43%, red 57%, transparent 58%),
-    linear-gradient(-45deg, transparent 42%, red 43%, red 57%, transparent 58%);
-  opacity:.9;
-  pointer-events:none;
-}
-.card.done::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(120,120,120,.22);
-  pointer-events:none;
-}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f5;color:#111}
+header{position:sticky;top:0;z-index:10;background:rgba(245,245,245,.96);backdrop-filter:blur(8px);padding:14px;border-bottom:1px solid #ddd}
+.title-row{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 8px;line-height:1.25}
+.update-date{font-size:14px;color:#666;font-weight:700;margin-bottom:10px}
+.status{font-size:16px;font-weight:900;margin:4px 0 14px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:0;border-radius:18px;padding:13px 20px;background:#fff;color:#2487ff;font-size:16px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer}
+.tab.active{background:#2487ff;color:#fff}
+.controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:16px;font-weight:700}
+.controls input{width:18px;height:18px}
+.reset-btn{border:0;border-radius:18px;padding:12px 20px;background:#fff;color:#2487ff;font-size:15px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+main{padding:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:16px}
+.card{position:relative;background:#fff;border-radius:18px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.10);cursor:pointer;overflow:hidden}
+.card img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block}
+.card.done img{filter:grayscale(100%) opacity(.35)}
+.card.done::after{content:"❌";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:56px;text-shadow:0 0 6px #fff}
 @media(max-width:600px){
   header{padding:12px}
   h1{font-size:19px}
@@ -153,32 +48,27 @@ main{
     <button class="reset-btn" id="resetBtn">全リセット</button>
   </div>
 </header>
-<main>
-  <div class="grid" id="grid"></div>
-</main>
+<main><div class="grid" id="grid"></div></main>
 
 <script>
-const categories = {"neta": ("ネタ", 96), "love": ("LOVE", 20), "stage": ("ステージ", 42), "greet": ("挨拶", 35), "great": ("えらい", 48), "laugh": ("笑", 19), "classic": ("定番", 147)};
+const categories = {"neta": {"label": "ネタ", "count": 96}, "love": {"label": "LOVE", "count": 20}, "stage": {"label": "ステージ", "count": 42}, "greet": {"label": "挨拶", "count": 35}, "great": {"label": "えらい", "count": 48}, "laugh": {"label": "笑", "count": 19}, "classic": {"label": "定番", "count": 147}};
 const categoryKeys = Object.keys(categories);
 let currentTab = "all";
-let done = JSON.parse(localStorage.getItem("iriamGiftDone_v2") || "{}");
+let done = JSON.parse(localStorage.getItem("iriamGiftDone_v3") || "{}");
 
-function pad(n) {
-  return String(n).padStart(3, "0");
-}
+function pad(n){ return String(n).padStart(3, "0"); }
 
-function makeGifts() {
+function makeGifts(){
   const list = [];
-  for (const key of categoryKeys) {
-    const label = categories[key][0];
-    const count = categories[key][1];
-    for (let i = 1; i <= count; i++) {
+  for(const key of categoryKeys){
+    const c = categories[key];
+    for(let i=1; i<=c.count; i++){
       list.push({
-        id: `${key}_${pad(i)}`,
+        id: key + "_" + pad(i),
         category: key,
-        label,
+        label: c.label,
         index: i,
-        image: `gifts/${key}/${key}_${pad(i)}.png`
+        image: "gifts/" + key + "/" + key + "_" + pad(i) + ".png"
       });
     }
   }
@@ -187,13 +77,12 @@ function makeGifts() {
 
 const gifts = makeGifts();
 
-function save() {
-  localStorage.setItem("iriamGiftDone_v2", JSON.stringify(done));
-}
+function save(){ localStorage.setItem("iriamGiftDone_v3", JSON.stringify(done)); }
 
-function makeTabs() {
+function makeTabs(){
   const tabs = document.getElementById("tabs");
   tabs.innerHTML = "";
+
   const all = document.createElement("button");
   all.className = "tab";
   all.dataset.tab = "all";
@@ -201,17 +90,17 @@ function makeTabs() {
   all.onclick = () => { currentTab = "all"; render(); };
   tabs.appendChild(all);
 
-  for (const key of categoryKeys) {
+  for(const key of categoryKeys){
     const btn = document.createElement("button");
     btn.className = "tab";
     btn.dataset.tab = key;
-    btn.textContent = categories[key][0];
+    btn.textContent = categories[key].label;
     btn.onclick = () => { currentTab = key; render(); };
     tabs.appendChild(btn);
   }
 }
 
-function render() {
+function render(){
   document.querySelectorAll(".tab").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.tab === currentTab);
   });
@@ -223,24 +112,24 @@ function render() {
   const completed = list.filter(g => done[g.id]).length;
   const percent = list.length ? Math.round(completed / list.length * 100) : 0;
   document.getElementById("status").textContent =
-    `達成率：${completed} / ${list.length}（${percent}%）`;
+    "達成率：" + completed + " / " + list.length + "（" + percent + "%）";
 
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
 
-  for (const g of shown) {
+  for(const g of shown){
     const card = document.createElement("div");
     card.className = "card" + (done[g.id] ? " done" : "");
     card.onclick = () => {
       done[g.id] = !done[g.id];
-      if (!done[g.id]) delete done[g.id];
+      if(!done[g.id]) delete done[g.id];
       save();
       render();
     };
 
     const img = document.createElement("img");
     img.src = g.image;
-    img.alt = `${g.label} ${g.index}`;
+    img.alt = g.label + " " + g.index;
     img.onerror = () => card.remove();
 
     card.appendChild(img);
@@ -250,7 +139,7 @@ function render() {
 
 document.getElementById("hideDone").addEventListener("change", render);
 document.getElementById("resetBtn").addEventListener("click", () => {
-  if (confirm("取得済みを全部リセットしますか？")) {
+  if(confirm("取得済みを全部リセットしますか？")){
     done = {};
     save();
     render();
