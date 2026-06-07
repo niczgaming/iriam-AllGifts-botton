@@ -2,19 +2,16 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>IRIAM ギフト耐久チェッカー</title>
-
 <style>
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:#f5f5f5;
   color:#111;
 }
-
 header{
   position:sticky;
   top:0;
@@ -24,143 +21,244 @@ header{
   padding:14px;
   border-bottom:1px solid #ddd;
 }
-
 .title-row{
   display:flex;
   align-items:flex-end;
   gap:14px;
   flex-wrap:wrap;
 }
-
+h1{
+  font-size:22px;
+  margin:0 0 8px;
+  line-height:1.25;
+}
 .update-date{
   font-size:14px;
   color:#666;
-  font-weight:600;
+  font-weight:700;
   margin-bottom:10px;
 }
-
-h1{
-  font-size:22px;
-  margin:0 0 10px;
-}
-
-.progress{
+.status{
   font-size:16px;
-  font-weight:700;
-  margin-bottom:14px;
+  font-weight:900;
+  margin:4px 0 14px;
 }
-
 .tabs{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-bottom:12px;
+  margin-bottom:14px;
 }
-
 .tab{
-  border:none;
+  border:0;
   border-radius:18px;
-  padding:14px 24px;
+  padding:13px 20px;
   background:#fff;
+  color:#2487ff;
   font-size:16px;
-  font-weight:700;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  font-weight:800;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
   cursor:pointer;
 }
-
 .tab.active{
   background:#2487ff;
   color:#fff;
 }
-
-.options{
+.controls{
   display:flex;
-  gap:12px;
   align-items:center;
+  gap:16px;
   flex-wrap:wrap;
-}
-
-.reset-btn{
-  border:none;
-  border-radius:18px;
-  padding:12px 22px;
-  background:#fff;
-  font-size:15px;
+  font-size:16px;
   font-weight:700;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-  cursor:pointer;
 }
-
+.controls input{
+  width:18px;
+  height:18px;
+}
+.reset-btn{
+  border:0;
+  border-radius:18px;
+  padding:12px 20px;
+  background:#fff;
+  color:#2487ff;
+  font-size:15px;
+  font-weight:800;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
 main{
-  padding:20px;
+  padding:18px;
 }
-
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:18px;
+  grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
+  gap:16px;
 }
-
 .card{
+  position:relative;
   background:#fff;
   border-radius:18px;
   padding:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.10);
+  cursor:pointer;
+  overflow:hidden;
 }
-
 .card img{
   width:100%;
   aspect-ratio:1/1;
   object-fit:contain;
+  display:block;
+}
+.card.done img{
+  filter:grayscale(100%) opacity(.35);
+}
+.card.done::after{
+  content:"";
+  position:absolute;
+  inset:10px;
+  background:
+    linear-gradient(45deg, transparent 42%, red 43%, red 57%, transparent 58%),
+    linear-gradient(-45deg, transparent 42%, red 43%, red 57%, transparent 58%);
+  opacity:.9;
+  pointer-events:none;
+}
+.card.done::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(120,120,120,.22);
+  pointer-events:none;
+}
+@media(max-width:600px){
+  header{padding:12px}
+  h1{font-size:19px}
+  .update-date{font-size:13px}
+  .tab{font-size:15px;padding:12px 18px}
+  main{padding:14px}
+  .grid{grid-template-columns:repeat(3,1fr);gap:14px}
+  .card{border-radius:16px;padding:8px}
 }
 </style>
 </head>
-
 <body>
-
 <header>
-
-<div class="title-row">
-  <h1>IRIAM ギフト耐久チェッカー</h1>
-  <div class="update-date">更新日：2026/06/08</div>
-</div>
-
-<div class="progress">
-  達成率：0 / 407（0%）
-</div>
-
-<div class="tabs">
-  <button class="tab active">全カテゴリー</button>
-  <button class="tab">ネタ</button>
-  <button class="tab">LOVE</button>
-  <button class="tab">ステージ</button>
-  <button class="tab">挨拶</button>
-  <button class="tab">えらい</button>
-  <button class="tab">笑</button>
-  <button class="tab">定番</button>
-</div>
-
-<div class="options">
-  <label>
-    <input type="checkbox">
-    未取得のみ表示
-  </label>
-
-  <button class="reset-btn">全リセット</button>
-</div>
-
+  <div class="title-row">
+    <h1>IRIAM ギフト耐久チェッカー</h1>
+    <div class="update-date">更新日：2026/06/08</div>
+  </div>
+  <div class="status" id="status">達成率：0 / 407（0%）</div>
+  <div class="tabs" id="tabs"></div>
+  <div class="controls">
+    <label><input type="checkbox" id="hideDone"> 未取得のみ表示</label>
+    <button class="reset-btn" id="resetBtn">全リセット</button>
+  </div>
 </header>
-
 <main>
-
-<div class="grid">
-  <div class="card"><img src="gifts/neta/neta_001.png"></div>
-  <div class="card"><img src="gifts/love/love_001.png"></div>
-  <div class="card"><img src="gifts/stage/stage_001.png"></div>
-</div>
-
+  <div class="grid" id="grid"></div>
 </main>
 
+<script>
+const categories = {"neta": ("ネタ", 96), "love": ("LOVE", 20), "stage": ("ステージ", 42), "greet": ("挨拶", 35), "great": ("えらい", 48), "laugh": ("笑", 19), "classic": ("定番", 147)};
+const categoryKeys = Object.keys(categories);
+let currentTab = "all";
+let done = JSON.parse(localStorage.getItem("iriamGiftDone_v2") || "{}");
+
+function pad(n) {
+  return String(n).padStart(3, "0");
+}
+
+function makeGifts() {
+  const list = [];
+  for (const key of categoryKeys) {
+    const label = categories[key][0];
+    const count = categories[key][1];
+    for (let i = 1; i <= count; i++) {
+      list.push({
+        id: `${key}_${pad(i)}`,
+        category: key,
+        label,
+        index: i,
+        image: `gifts/${key}/${key}_${pad(i)}.png`
+      });
+    }
+  }
+  return list;
+}
+
+const gifts = makeGifts();
+
+function save() {
+  localStorage.setItem("iriamGiftDone_v2", JSON.stringify(done));
+}
+
+function makeTabs() {
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  const all = document.createElement("button");
+  all.className = "tab";
+  all.dataset.tab = "all";
+  all.textContent = "全カテゴリー";
+  all.onclick = () => { currentTab = "all"; render(); };
+  tabs.appendChild(all);
+
+  for (const key of categoryKeys) {
+    const btn = document.createElement("button");
+    btn.className = "tab";
+    btn.dataset.tab = key;
+    btn.textContent = categories[key][0];
+    btn.onclick = () => { currentTab = key; render(); };
+    tabs.appendChild(btn);
+  }
+}
+
+function render() {
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === currentTab);
+  });
+
+  const hideDone = document.getElementById("hideDone").checked;
+  const list = gifts.filter(g => currentTab === "all" || g.category === currentTab);
+  const shown = list.filter(g => !(hideDone && done[g.id]));
+
+  const completed = list.filter(g => done[g.id]).length;
+  const percent = list.length ? Math.round(completed / list.length * 100) : 0;
+  document.getElementById("status").textContent =
+    `達成率：${completed} / ${list.length}（${percent}%）`;
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  for (const g of shown) {
+    const card = document.createElement("div");
+    card.className = "card" + (done[g.id] ? " done" : "");
+    card.onclick = () => {
+      done[g.id] = !done[g.id];
+      if (!done[g.id]) delete done[g.id];
+      save();
+      render();
+    };
+
+    const img = document.createElement("img");
+    img.src = g.image;
+    img.alt = `${g.label} ${g.index}`;
+    img.onerror = () => card.remove();
+
+    card.appendChild(img);
+    grid.appendChild(card);
+  }
+}
+
+document.getElementById("hideDone").addEventListener("change", render);
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (confirm("取得済みを全部リセットしますか？")) {
+    done = {};
+    save();
+    render();
+  }
+});
+
+makeTabs();
+render();
+</script>
 </body>
 </html>
